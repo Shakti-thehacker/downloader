@@ -1,0 +1,183 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Universal File Downloader
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+    /* Smooth fade in/out for the input box */
+    .fade-enter {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    .fade-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+    .fade-exit {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-exit-active {
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-50 min-h-screen flex flex-col items-center px-4 py-12">
+  <header class="mb-12 text-center max-w-xl w-full">
+   <h1 class="text-4xl font-semibold text-gray-800 mb-2">
+    Universal File Downloader
+   </h1>
+   <p class="text-gray-500 text-lg">
+    Download images, videos, and documents directly via link
+   </p>
+  </header>
+  <main class="w-full max-w-3xl">
+   <section aria-label="Download file categories" class="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12" id="sections" role="list">
+    <button aria-pressed="false" class="download-section flex flex-col items-center bg-white rounded-xl shadow-md p-6 cursor-pointer transition-shadow hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-300" data-type="image" type="button">
+     <img alt="Icon representing images, a photo frame with mountains and sun" class="mb-4" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc28ca99-6e26-4818-8325-4755f26ddd7a.jpg" width="80"/>
+     <span class="text-lg font-semibold text-gray-700">
+      Images
+     </span>
+    </button>
+    <button aria-pressed="false" class="download-section flex flex-col items-center bg-white rounded-xl shadow-md p-6 cursor-pointer transition-shadow hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-300" data-type="video" type="button">
+     <img alt="Icon representing videos, a play button inside a rectangle screen" class="mb-4" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/88f94288-a3bb-49be-c042-b1ab48101856.jpg" width="80"/>
+     <span class="text-lg font-semibold text-gray-700">
+      Videos
+     </span>
+    </button>
+    <button aria-pressed="false" class="download-section flex flex-col items-center bg-white rounded-xl shadow-md p-6 cursor-pointer transition-shadow hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-300" data-type="document" type="button">
+     <img alt="Icon representing documents and other files, a sheet of paper with text lines" class="mb-4" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/5f60678c-fb99-40e5-822d-042fd48cb3ef.jpg" width="80"/>
+     <span class="text-lg font-semibold text-gray-700">
+      Documents / Other Files
+     </span>
+    </button>
+   </section>
+   <section class="max-w-xl mx-auto" id="download-box-container">
+   </section>
+  </main>
+  <script>
+   const sections = document.querySelectorAll('.download-section');
+    const container = document.getElementById('download-box-container');
+
+    let activeType = null;
+
+    function createDownloadBox(type) {
+      // Clear container
+      container.innerHTML = '';
+
+      // Create wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className =
+        'bg-white rounded-xl shadow-lg p-6 flex flex-col space-y-4 transition-all duration-300 ease-in-out';
+
+      // Label
+      const label = document.createElement('label');
+      label.setAttribute('for', 'download-link');
+      label.className = 'text-gray-700 font-semibold text-lg';
+      label.textContent = `Paste your ${type === 'image' ? 'image' : type === 'video' ? 'video' : 'document or file'} download link below:`;
+      wrapper.appendChild(label);
+
+      // Input
+      const input = document.createElement('input');
+      input.type = 'url';
+      input.id = 'download-link';
+      input.placeholder = 'https://example.com/file.jpg';
+      input.className =
+        'w-full rounded-md border border-gray-300 px-4 py-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition';
+      input.autocomplete = 'off';
+      input.spellcheck = false;
+      wrapper.appendChild(input);
+
+      // Button
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.disabled = true;
+      button.className =
+        'mt-2 w-full bg-indigo-600 text-white font-semibold rounded-md py-3 shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed transition';
+      button.textContent = 'Download Now';
+      wrapper.appendChild(button);
+
+      // Validation and enabling button
+      input.addEventListener('input', () => {
+        try {
+          const url = new URL(input.value.trim());
+          button.disabled = false;
+        } catch {
+          button.disabled = true;
+        }
+      });
+
+      // Download function
+      button.addEventListener('click', () => {
+        const url = input.value.trim();
+        if (!url) return;
+
+        // Create a temporary anchor to trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+
+        // Try to extract filename from URL
+        let filename = url.split('/').pop().split('?')[0];
+        if (!filename) {
+          // fallback filename
+          filename = 'download';
+          if (type === 'image') filename += '.jpg';
+          else if (type === 'video') filename += '.mp4';
+          else filename += '.bin';
+        }
+        a.download = filename;
+
+        // Append to body, click and remove
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      container.appendChild(wrapper);
+      input.focus();
+    }
+
+    sections.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // If clicked same section, toggle off
+        if (activeType === btn.dataset.type) {
+          activeType = null;
+          container.innerHTML = '';
+          btn.setAttribute('aria-pressed', 'false');
+          return;
+        }
+
+        // Reset aria-pressed for all
+        sections.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+
+        activeType = btn.dataset.type;
+        btn.setAttribute('aria-pressed', 'true');
+        createDownloadBox(activeType);
+      });
+    });
+
+    // Accessibility: allow keyboard navigation and activation
+    sections.forEach((btn) => {
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+  </script>
+ </body>
+</html>
