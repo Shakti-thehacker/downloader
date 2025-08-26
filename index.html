@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Downloader</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>File Downloader</h1>
+    <p>Select file type to download</p>
+
+    <div class="options">
+      <button onclick="showInput('image')">Images</button>
+      <button onclick="showInput('video')">Videos</button>
+      <button onclick="showInput('document')">Documents / Other Files</button>
+    </div>
+
+    <div class="input-box" id="input-box" style="display: none;">
+      <input type="text" id="fileLink" placeholder="Paste your download link here...">
+      <button id="downloadBtn" onclick="downloadFile()">Download Now</button>
+    </div>
+
+    <p id="status"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+    </html>
