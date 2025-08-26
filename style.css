@@ -1,76 +1,105 @@
+/* Reset and base */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-  background: #f4f7fb;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .container {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width: 400px;
+  max-width: 450px;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 h1 {
+  color: #1f2937;
+  font-size: 28px;
   margin-bottom: 10px;
-  color: #333;
 }
 
 p {
-  color: #666;
-  margin-bottom: 20px;
+  color: #4b5563;
+  margin-bottom: 25px;
+  font-size: 16px;
 }
 
 .options button {
-  margin: 5px;
-  padding: 10px 20px;
+  margin: 8px;
+  padding: 12px 25px;
   border: none;
-  border-radius: 12px;
-  background: #4a90e2;
-  color: white;
+  border-radius: 15px;
+  background: #3b82f6;
+  color: #ffffff;
+  font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .options button:hover {
-  background: #357ab8;
+  background: #2563eb;
+  transform: translateY(-2px);
 }
 
 .input-box {
-  margin-top: 20px;
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .input-box input {
-  padding: 10px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.input-box input:focus {
+  border-color: #3b82f6;
+  outline: none;
 }
 
 #downloadBtn {
-  background: #28a745;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #10b981;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 #downloadBtn:hover {
-  background: #1f7a32;
+  background: #059669;
+  transform: translateY(-2px);
 }
 
 #status {
-  margin-top: 15px;
+  margin-top: 18px;
   font-size: 14px;
-  color: #555;
+  color: #374151;
+}
+
+.ad-top, .ad-bottom {
+  margin: 15px 0;
+  border-radius: 12px;
+  overflow: hidden;
 }
