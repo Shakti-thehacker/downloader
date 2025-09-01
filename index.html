@@ -1,33 +1,940 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="monetag" content="981e348f79326943fdb669951f94f4b2">
-  <script src="https://fpyf8.com/88/tag.min.js" data-zone="166635" async data-cfasync="false"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta name="monetag" content="e5e4238f4708165d3311ea9e8c11d376">
-  <title>Universal File Downloader in trial</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="BuZZ_CHaT - A dark-themed group chat website with neon lighting effects">
+    <meta name="theme-color" content="#00BFFF">
+    <title>BuZZ_CHaT</title>
+    <style>
+        /* Base CSS Variables */
+        :root {
+            --background: hsl(240, 15%, 5%);
+            --foreground: hsl(210, 20%, 95%);
+            --muted: hsl(240, 10%, 12%);
+            --muted-foreground: hsl(220, 15%, 65%);
+            --card: hsl(240, 15%, 7%);
+            --card-foreground: hsl(210, 20%, 95%);
+            --border: hsl(240, 10%, 18%);
+            --input: hsl(240, 15%, 10%);
+            --primary: hsl(185, 100%, 55%);
+            --primary-foreground: hsl(0, 0%, 0%);
+            --destructive: hsl(0, 85%, 60%);
+            --destructive-foreground: hsl(210, 20%, 95%);
+
+            /* Neon Colors - Cool palette */
+            --neon-teal: hsl(185, 100%, 55%);
+            --neon-cyan: hsl(195, 100%, 60%);
+            --neon-purple: hsl(300, 100%, 70%);
+            --neon-electric: hsl(170, 100%, 50%);
+            --neon-violet: hsl(260, 100%, 70%);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+            -webkit-overflow-scrolling: touch;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Orbitron Font Simulation */
+        .font-orbitron {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .font-mono {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Neon Text Effect */
+        .neon-text {
+            text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+        }
+
+        .animate-pulse-neon {
+            animation: pulse-neon 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-neon {
+            from { 
+                text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor; 
+            }
+            to { 
+                text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor; 
+            }
+        }
+
+        /* Neon Border */
+        .neon-border {
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* Neon Glow Effects */
+        .neon-glow-blue {
+            box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue);
+        }
+
+        .neon-glow-green {
+            box-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green), 0 0 15px var(--neon-green);
+        }
+
+        .neon-glow-purple {
+            box-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple), 0 0 15px var(--neon-purple);
+        }
+
+        /* Scanner Effect */
+        .scanner-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 16px;
+            height: 100%;
+            background: linear-gradient(to right, transparent, var(--neon-blue), transparent);
+            opacity: 0.08;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+
+        /* Layout Styles */
+        .app-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 8px;
+        }
+
+        .modal-card {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: var(--muted-foreground);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--foreground);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--neon-blue);
+            color: black;
+        }
+
+        .btn-secondary {
+            background: var(--neon-purple);
+            color: white;
+        }
+
+        .btn-destructive {
+            background: var(--destructive);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Chat Interface */
+        .chat-header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .chat-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .user-sidebar {
+            width: 250px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 16px;
+        }
+
+        .messages-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-list {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .message-item.own {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 300px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .message-bubble {
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            word-wrap: break-word;
+        }
+
+        .system-message {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0;
+        }
+
+        .system-badge {
+            background: rgba(0, 191, 255, 0.2);
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .message-input-container {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            background: var(--card);
+        }
+
+        .message-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px;
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--foreground);
+            font-size: 14px;
+        }
+
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .member-item:hover {
+            background: var(--muted);
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-electric);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* User Colors - Cool palette */
+        .user-teal { color: var(--neon-teal); border-color: var(--neon-teal); }
+        .user-cyan { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+        .user-purple { color: var(--neon-purple); border-color: var(--neon-purple); }
+        .user-electric { color: var(--neon-electric); border-color: var(--neon-electric); }
+        .user-violet { color: var(--neon-violet); border-color: var(--neon-violet); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .user-sidebar {
+                position: fixed;
+                inset: 0;
+                z-index: 40;
+                width: 100%;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .user-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .chat-header {
+                padding: 12px;
+            }
+
+            .modal-card {
+                padding: 16px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            button, input, textarea, select {
+                min-height: 44px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mb-6 { margin-bottom: 24px; }
+        .truncate { 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>File Downloader</h1>
-    <p>Select file type to download</p>
+    <div id="app" class="app-container">
+        <!-- Scanner Effect -->
+        <div class="scanner-effect">
+            <div class="scanner-line"></div>
+        </div>
 
-    <div class="options">
-      <button onclick="showInput('image')">Images</button>
-      <button onclick="showInput('video')">Videos</button>
-      <button onclick="showInput('document')">Documents / Other Files</button>
+        <!-- Join Modal -->
+        <div id="joinModal" class="modal-overlay">
+            <div class="modal-card neon-border">
+                <div class="text-center mb-6">
+                    <h1 class="font-orbitron neon-text animate-pulse-neon user-teal" style="font-size: 2rem; margin-bottom: 8px;">
+                        BuZZ_CHaT
+                    </h1>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
+                        <svg width="16" height="16" fill="var(--neon-purple)" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span class="font-mono" style="color: var(--neon-purple); font-size: 0.8rem;">@buzz__chat__sgi</span>
+                    </div>
+                    <p style="color: var(--muted-foreground); font-size: 0.9rem;">Enter the digital realm</p>
+                </div>
+
+                <form id="joinForm">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span style="color: var(--neon-purple);">👥</span> Group Name
+                        </label>
+                        <input type="text" id="groupName" class="form-input" placeholder="Enter group name..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span style="color: var(--neon-green);">👤</span> Username
+                        </label>
+                        <input type="text" id="username" class="form-input" placeholder="Choose your handle..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span style="color: var(--neon-purple);">🔒</span> Group Password
+                        </label>
+                        <input type="password" id="password" class="form-input" placeholder="Enter access code..." required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">
+                            <span>🚀</span> Join/Create Group
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div id="chatInterface" class="hidden">
+            <!-- Header -->
+            <header class="chat-header">
+                <div class="chat-title">
+                    <h1 class="font-orbitron neon-text user-blue" style="font-size: 1.5rem;">BuZZ_CHaT</h1>
+                    <div>
+                        <span id="groupNameDisplay" class="font-mono user-green"></span>
+                    </div>
+                </div>
+                <div class="chat-controls">
+                    <button id="toggleUsers" class="btn" style="background: transparent; color: var(--neon-blue); padding: 8px;">
+                        👥
+                    </button>
+                    <button id="leaveBtn" class="btn btn-destructive" style="padding: 8px 12px; font-size: 12px;">
+                        🚪 Exit
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Chat -->
+            <div class="chat-main">
+                <!-- User Sidebar -->
+                <div id="userSidebar" class="user-sidebar">
+                    <div style="border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px;">
+                        <h3 style="color: var(--neon-purple); font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                            👥 Members Online
+                        </h3>
+                    </div>
+                    <div id="membersList" class="member-list">
+                        <!-- Members will be added here -->
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px;">
+                        <h4 style="color: var(--muted-foreground); font-size: 0.8rem; margin-bottom: 8px;">Group Stats</h4>
+                        <div style="font-size: 0.8rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span>Members:</span>
+                                <span id="memberCount" class="font-mono user-green">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Status:</span>
+                                <span class="font-mono user-blue">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages-container">
+                    <div id="messagesList" class="messages-list">
+                        <!-- Messages will be added here -->
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="message-input-container">
+                        <form id="messageForm" class="message-form">
+                            <input type="text" id="messageInput" class="message-input" placeholder="Type your message..." autocomplete="off">
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 16px;">
+                                <span>📤</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="input-box" id="input-box" style="display: none;">
-      <input type="text" id="fileLink" placeholder="Paste your download link here...">
-      <button id="downloadBtn" onclick="downloadFile()">Download Now</button>
-    </div>
+    <script>
+        // In-Memory Storage
+        class ChatStorage {
+            constructor() {
+                this.groups = new Map();
+                this.members = new Map();
+                this.messages = new Map();
+                this.currentGroupId = 1;
+                this.currentMemberId = 1;
+                this.currentMessageId = 1;
+                this.groupCleanupTimers = new Map();
+            }
 
-    <p id="status"></p>
-  </div>
+            createGroup(name, password) {
+                const id = this.currentGroupId++;
+                const group = { id, name, password, createdAt: new Date() };
+                this.groups.set(id, group);
+                return group;
+            }
 
-  <script src="script.js"></script>
+            getGroupByName(name) {
+                return Array.from(this.groups.values()).find(g => g.name === name);
+            }
+
+            addMember(groupId, username) {
+                const id = this.currentMemberId++;
+                const member = { id, groupId, username, joinedAt: new Date() };
+
+                // Cancel cleanup timer if it exists (someone rejoined)
+                if (this.groupCleanupTimers.has(groupId)) {
+                    clearTimeout(this.groupCleanupTimers.get(groupId));
+                    this.groupCleanupTimers.delete(groupId);
+                    console.log(`[Storage] Cancelled cleanup for group ${groupId} - new member joined.`);
+                }
+
+                this.members.set(id, member);
+                return member;
+            }
+
+            getGroupMembers(groupId) {
+                return Array.from(this.members.values()).filter(m => m.groupId === groupId);
+            }
+
+            isUserInGroup(groupId, username) {
+                return Array.from(this.members.values()).some(m => m.groupId === groupId && m.username === username);
+            }
+
+            addMessage(groupId, username, content, type = 'message') {
+                const id = this.currentMessageId++;
+                const message = { id, groupId, username, content, type, createdAt: new Date() };
+                this.messages.set(id, message);
+                return message;
+            }
+
+            getGroupMessages(groupId) {
+                return Array.from(this.messages.values())
+                    .filter(m => m.groupId === groupId)
+                    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+            }
+
+            removeMember(groupId, username) {
+                const member = Array.from(this.members.values()).find(m => m.groupId === groupId && m.username === username);
+                if (member) {
+                    this.members.delete(member.id);
+                    this.scheduleGroupCleanupIfEmpty(groupId);
+                }
+            }
+
+            scheduleGroupCleanupIfEmpty(groupId) {
+                const members = Array.from(this.members.values()).filter(m => m.groupId === groupId);
+
+                if (members.length === 0) {
+                    // Cancel any existing cleanup timer for this group
+                    if (this.groupCleanupTimers.has(groupId)) {
+                        clearTimeout(this.groupCleanupTimers.get(groupId));
+                    }
+
+                    // Schedule cleanup in 5 minutes (300,000 milliseconds)
+                    const timer = setTimeout(() => {
+                        this.cleanupEmptyGroup(groupId);
+                    }, 5 * 60 * 1000);
+
+                    this.groupCleanupTimers.set(groupId, timer);
+                    console.log(`[Storage] Group ${groupId} is empty. Scheduled cleanup in 5 minutes.`);
+                }
+            }
+
+            cleanupEmptyGroup(groupId) {
+                // Double check that group is still empty
+                const members = Array.from(this.members.values()).filter(m => m.groupId === groupId);
+
+                if (members.length === 0) {
+                    // Delete all group data
+                    this.groups.delete(groupId);
+
+                    // Delete all messages for this group
+                    const messagesToDelete = Array.from(this.messages.entries())
+                        .filter(([_, message]) => message.groupId === groupId)
+                        .map(([id, _]) => id);
+
+                    messagesToDelete.forEach(id => this.messages.delete(id));
+
+                    // Remove cleanup timer
+                    this.groupCleanupTimers.delete(groupId);
+
+                    console.log(`[Storage] Cleaned up empty group ${groupId} and ${messagesToDelete.length} messages.`);
+                } else {
+                    console.log(`[Storage] Group ${groupId} has members again, cleanup cancelled.`);
+                    this.groupCleanupTimers.delete(groupId);
+                }
+            }
+        }
+
+        // Chat Application
+        class BuzzChat {
+            constructor() {
+                this.storage = new ChatStorage();
+                this.currentGroup = null;
+                this.currentUser = null;
+                this.messageUpdateInterval = null;
+                this.userColors = ['blue', 'purple', 'green', 'pink', 'yellow'];
+
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                // Join form
+                document.getElementById('joinForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleJoinGroup();
+                });
+
+                // Message form
+                document.getElementById('messageForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSendMessage();
+                });
+
+                // Leave button
+                document.getElementById('leaveBtn').addEventListener('click', () => {
+                    this.handleLeaveGroup();
+                });
+
+                // Toggle users sidebar
+                document.getElementById('toggleUsers').addEventListener('click', () => {
+                    this.toggleUserSidebar();
+                });
+            }
+
+            async handleJoinGroup() {
+                const groupName = document.getElementById('groupName').value.trim();
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+
+                if (!groupName || !username || !password) {
+                    alert('All fields are required');
+                    return;
+                }
+
+                // Check if group exists
+                let group = this.storage.getGroupByName(groupName);
+
+                if (!group) {
+                    // Create new group
+                    group = this.storage.createGroup(groupName, password);
+                } else {
+                    // Verify password
+                    if (group.password !== password) {
+                        alert('Invalid password');
+                        return;
+                    }
+                }
+
+                // Check if user is already in group
+                if (!this.storage.isUserInGroup(group.id, username)) {
+                    // Add user to group
+                    this.storage.addMember(group.id, username);
+
+                    // Add join message
+                    this.storage.addMessage(group.id, username, `${username} joined the group`, 'join');
+                }
+
+                this.currentGroup = group;
+                this.currentUser = { username };
+
+                this.showChatInterface();
+                this.startMessageUpdates();
+            }
+
+            handleSendMessage() {
+                const messageInput = document.getElementById('messageInput');
+                const content = messageInput.value.trim();
+
+                if (!content) return;
+
+                this.storage.addMessage(
+                    this.currentGroup.id,
+                    this.currentUser.username,
+                    content,
+                    'message'
+                );
+
+                messageInput.value = '';
+                this.updateMessages();
+            }
+
+            handleLeaveGroup() {
+                if (this.currentGroup && this.currentUser) {
+                    // Remove user from group
+                    this.storage.removeMember(this.currentGroup.id, this.currentUser.username);
+
+                    // Add leave message
+                    this.storage.addMessage(
+                        this.currentGroup.id,
+                        this.currentUser.username,
+                        `${this.currentUser.username} left the group`,
+                        'leave'
+                    );
+                }
+
+                this.currentGroup = null;
+                this.currentUser = null;
+
+                if (this.messageUpdateInterval) {
+                    clearInterval(this.messageUpdateInterval);
+                }
+
+                this.showJoinModal();
+            }
+
+            showJoinModal() {
+                document.getElementById('joinModal').classList.remove('hidden');
+                document.getElementById('chatInterface').classList.add('hidden');
+
+                // Clear form
+                document.getElementById('joinForm').reset();
+            }
+
+            showChatInterface() {
+                document.getElementById('joinModal').classList.add('hidden');
+                document.getElementById('chatInterface').classList.remove('hidden');
+
+                document.getElementById('groupNameDisplay').textContent = this.currentGroup.name;
+
+                this.updateMessages();
+                this.updateMembers();
+            }
+
+            startMessageUpdates() {
+                if (this.messageUpdateInterval) {
+                    clearInterval(this.messageUpdateInterval);
+                }
+
+                this.messageUpdateInterval = setInterval(() => {
+                    this.updateMessages();
+                    this.updateMembers();
+                }, 2000);
+            }
+
+            updateMessages() {
+                const messagesList = document.getElementById('messagesList');
+                const messages = this.storage.getGroupMessages(this.currentGroup.id);
+
+                messagesList.innerHTML = '';
+
+                messages.forEach(message => {
+                    const messageEl = this.createMessageElement(message);
+                    messagesList.appendChild(messageEl);
+                });
+
+                // Scroll to bottom
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+
+            createMessageElement(message) {
+                const div = document.createElement('div');
+                const userColor = this.getUserColor(message.username);
+                const isCurrentUser = message.username === this.currentUser.username;
+
+                if (message.type === 'join') {
+                    div.className = 'system-message';
+                    div.innerHTML = `
+                        <div class="system-badge user-green">
+                            <span>➕</span>
+                            <span class="font-mono">${message.username}</span> joined the group
+                            <span style="font-size: 10px; opacity: 0.7;">${this.formatTime(message.createdAt)}</span>
+                        </div>
+                    `;
+                    return div;
+                }
+
+                if (message.type === 'leave') {
+                    div.className = 'system-message';
+                    div.innerHTML = `
+                        <div class="system-badge" style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; border-color: rgba(255, 0, 0, 0.3);">
+                            <span>➖</span>
+                            <span class="font-mono">${message.username}</span> left the group
+                            <span style="font-size: 10px; opacity: 0.7;">${this.formatTime(message.createdAt)}</span>
+                        </div>
+                    `;
+                    return div;
+                }
+
+                div.className = `message-item ${isCurrentUser ? 'own' : ''}`;
+                div.innerHTML = `
+                    ${!isCurrentUser ? `<div class="message-avatar user-${userColor}">${message.username.charAt(0).toUpperCase()}</div>` : ''}
+                    <div class="message-content">
+                        <div class="message-header">
+                            ${!isCurrentUser ? `<span class="font-mono user-${userColor}">${message.username}</span>` : ''}
+                            <span style="color: var(--muted-foreground); font-size: 11px;">${this.formatTime(message.createdAt)}</span>
+                            ${isCurrentUser ? `<span class="font-mono user-${userColor}">${message.username}</span>` : ''}
+                        </div>
+                        <div class="message-bubble ${isCurrentUser ? `user-${userColor}` : ''}" style="${isCurrentUser ? `background: rgba(var(--neon-${userColor === 'blue' ? '0, 191, 255' : userColor === 'purple' ? '200, 0, 255' : userColor === 'green' ? '0, 255, 100' : userColor === 'pink' ? '255, 0, 150' : '255, 255, 0'}), 0.2);` : ''}">
+                            ${message.content}
+                        </div>
+                    </div>
+                    ${isCurrentUser ? `<div class="message-avatar user-${userColor}">${message.username.charAt(0).toUpperCase()}</div>` : ''}
+                `;
+
+                return div;
+            }
+
+            updateMembers() {
+                const membersList = document.getElementById('membersList');
+                const memberCount = document.getElementById('memberCount');
+                const members = this.storage.getGroupMembers(this.currentGroup.id);
+
+                membersList.innerHTML = '';
+                memberCount.textContent = members.length;
+
+                members.forEach(member => {
+                    const memberEl = document.createElement('div');
+                    const userColor = this.getUserColor(member.username);
+
+                    memberEl.className = 'member-item';
+                    memberEl.innerHTML = `
+                        <div class="online-dot"></div>
+                        <span class="font-mono truncate" style="flex: 1;">${member.username}</span>
+                        <span style="font-size: 11px; color: var(--muted-foreground);">online</span>
+                    `;
+
+                    membersList.appendChild(memberEl);
+                });
+            }
+
+            getUserColor(username) {
+                return this.userColors[username.length % this.userColors.length];
+            }
+
+            formatTime(date) {
+                return new Date(date).toLocaleTimeString('en-US', { 
+                    hour12: false, 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            }
+
+            toggleUserSidebar() {
+                const sidebar = document.getElementById('userSidebar');
+                sidebar.classList.toggle('show');
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new BuzzChat();
+        });
+    </script>
+
 </body>
-    </html>
+                              </html>
